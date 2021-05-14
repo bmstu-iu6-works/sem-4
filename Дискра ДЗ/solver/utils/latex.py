@@ -3,7 +3,7 @@ from .state import get_fulfilled_parts
 
 
 def repr_path(path):
-    parts = ["x_{%s}" % str(part) for part in path]
+    parts = ["$x_{%s}$" % str(part) for part in path]
     return "(" + ", ".join(parts) + ")"
 
 
@@ -16,7 +16,7 @@ def repr_delta(graph, state, path):
 
     # ,<short space>
     mx = r",\,".join(parts)
-    return r"\delta^*=min\{" + mx + r"\}"
+    return r"\delta^*=\min\{" + mx + r"\}"
 
 
 def repr_xi(state, path):
@@ -29,12 +29,12 @@ def repr_xi(state, path):
 
     # ,<short space>
     mx = r",\,".join(parts)
-    return r"\xi^*=min\{" + mx + r"\}"
+    return r"\xi^*=\min\{" + mx + r"\}"
 
 
 def draw_formulas(graph, result_flow, path, state, delta, xi=0):
     result = "\n"
-    result += r"\being{gather*}" + "\n"
+    result += r"\begin{gather*}" + "\n"
     result += (repr_delta(graph, state, path) + f"={delta}") + "\\\\\n"
     if xi:
         result += (repr_xi(state, path) + f"={xi}") + "\\\\\n"

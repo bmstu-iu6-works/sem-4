@@ -126,7 +126,7 @@ def main():
     print(r"\section{Максимальный поток по Теореме 2}")
 
     result_flow, state = process_section(graph, result_flow, state, allow_reverse=True)
-    print(f"{str(result_flow)}")
+    print(f"\\[\\varphi = {str(result_flow)}\\]")
 
     with open('final.gv', 'w') as f:
         nodes = list(set(find_accessable(graph, state)))
@@ -139,25 +139,24 @@ def process_section(graph, result_flow, state, allow_reverse=False):
 
     path = find_path(graph, state, allow_reverse=allow_reverse)
     while path is not None:
-        digraph_name = f"graph_{'r' if allow_reverse else 'f'}_{cntr}.gv"
+        digraph_name = f"graph_{'r' if allow_reverse else 'f'}_{cntr}"
 
         delta = min(float('inf'), *get_positive_flow_part(graph, state, path))
         xi = min(float('inf'), *get_negative_flow_part(graph, state, path)) if allow_reverse else None
 
         print()
-        print(r"\hline")
-        print(r"\textbf{Путь " + repr_path(path) + "}")
         print(r"\stepcounter{path_counter}")
+        print(r"\subsection{Путь \Alph{path_counter} " + repr_path(path) + "}")
 
-        with open(digraph_name, 'w') as f:
+        with open(digraph_name + '.gv', 'w') as f:
             nodes = list(set(find_accessable(graph, state))) if allow_reverse else None
             print(draw_digraph(graph, state, highlight_path=path,
                                highlight_nodes=nodes), file=f)
 
         print("""
-        \\being{figure}[h]
+        \\begin{figure}[h]
             \\centering
-            \\includegraphics[width=\\textwidth]{%s}
+            \\includegraphics[width=\\textwidth]{%s.png}
             \\caption{Путь "\\Alph{path_counter}" на графе}
         \\end{figure}
         """ % digraph_name)
